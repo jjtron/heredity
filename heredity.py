@@ -366,18 +366,31 @@ def parents(people, person):
 
 
 def update(probabilities, one_gene, two_genes, have_trait, p):
+    '''
     pprint.pp(probabilities)
     pprint.pp(one_gene)
     pprint.pp(two_genes)
     pprint.pp(have_trait)
     pprint.pp(p)
+    '''
     """
     Add to `probabilities` a new joint probability `p`.
     Each person should have their "gene" and "trait" distributions updated.
     Which value for each distribution is updated depends on whether
     the person is in `have_gene` and `have_trait`, respectively.
     """
-    
+    for person in probabilities:
+        if person not in one_gene and person not in two_genes:
+            probabilities[person]['gene'][0] += p
+        if person in one_gene:
+            probabilities[person]['gene'][1] += p
+        if person in two_genes:
+            probabilities[person]['gene'][2] += p
+
+        if person in have_trait:
+            probabilities[person]['trait'][True] += p
+        else:
+            probabilities[person]['trait'][False] += p
 
 
 def normalize(probabilities):
