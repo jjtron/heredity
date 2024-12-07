@@ -65,8 +65,8 @@ def main():
          'James': {'name': 'James', 'mother': None, 'father': None, 'trait': True},
          'Lily': {'name': 'Lily', 'mother': None, 'father': None, 'trait': False}
         },
-        {"Harry","James"},
-        {"Lily"},
+        {"Harry"},
+        {"James"},
         {"James"}
     )
     return
@@ -149,102 +149,121 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
-    print(mutation_probabilities_one_gene(people, one_gene, two_genes))
-    print(mutation_probabilities_two_genes(people, one_gene, two_genes))
-
-def mutation_probabilities_one_gene(people, one_gene, two_genes):
-    mutation_probability = 0
     for person in people:
-        # Check if person has parents
-        parent_list = parents(people, person)
-        mother = parent_list["mother"]
-        father = parent_list["father"]
+        fg = 0
+        ft = 0
+        if person not in one_gene and person not in two_genes:
+            fg = calc_prob_gene(0, person in have_trait)
+            ft = mutation_probabilities_zero_genes(people, person, one_gene, two_genes)
+        if person in one_gene:
+            print("*1",person)
+            fg = calc_prob_gene(1, person in have_trait)
+            ft = mutation_probabilities_one_gene(people, person, one_gene, two_genes)
+        if person in two_genes:
+            print("*2",person)
+            fg = calc_prob_gene(2, person in have_trait)
+            ft = mutation_probabilities_two_genes(people, person, one_gene, two_genes)
+        print(person, fg, " * ", ft)
 
-        #print(mother, father)
+def calc_prob_gene(gene_count, has_trait):
+        return PROBS["gene"][gene_count] * PROBS["trait"][gene_count][has_trait]
+        
+def mutation_probabilities_zero_genes(people, person, one_gene, two_genes):
+    return "TBD"
 
-        if mother == None and father == None:
-            print()
-            #print("No parents")
+def mutation_probabilities_one_gene(people, the_person, one_gene, two_genes):
+    mutation_probability = 0
 
-        if mother != None and father == None:
-            print()
-            #print("One parent")
+    # Check if person has parents
+    parent_list = parents(people, the_person)
+    mother = parent_list["mother"]
+    father = parent_list["father"]
 
-        # Case: person has two parents
-        if mother != None and father != None:
-            #print("mother != None and father != None")
-            # Case 1: one parent 0,0, other parent 1,1
-            if mother not in one_gene and mother not in two_genes:
-                if father in two_genes:
-                    mutation_probability = .9802
+    print(the_person, "ONE GENE ---> mother: ", mother, "; father: ", father)
+
+    if mother == None and father == None:
+        print()
+        #print("No parents")
+
+    if mother != None and father == None:
+        print()
+        #print("One parent")
+
+    # Case: person has two parents
+    if mother != None and father != None:
+        #print("mother != None and father != None")
+        # Case 1: one parent 0,0, other parent 1,1
+        if mother not in one_gene and mother not in two_genes:
+            if father in two_genes:
+                mutation_probability = .9802
+        if father not in one_gene and father not in two_genes:
+            if mother in two_genes:
+                mutation_probability = .9802
+
+        # Case 2: mother 0,1 and father 0,1
+        if mother in one_gene and father in one_gene:
+            mutation_probability = .9999
+
+        # Case 3: mother 0,0 and father 0,0
+        if mother not in one_gene and mother not in two_genes:
             if father not in one_gene and father not in two_genes:
-                if mother in two_genes:
-                    mutation_probability = .9802
-
-            # Case 2: mother 0,1 and father 0,1
-            if mother in one_gene and father in one_gene:
-                mutation_probability = .9999
-
-            # Case 3: mother 0,0 and father 0,0
-            if mother not in one_gene and mother not in two_genes:
-                if father not in one_gene and father not in two_genes:
-                    mutation_probability = .0099
-
-            # Case 4: mother 1,1 and father 1,1
-            if mother in two_genes and father in two_genes:
                 mutation_probability = .0099
 
-            # Case 5: one parent 0,1, other parent 1,1
-            if (mother in one_gene and father in two_genes) or (father in one_gene and mother in two_genes):
-                mutation_probability = .01
+        # Case 4: mother 1,1 and father 1,1
+        if mother in two_genes and father in two_genes:
+            mutation_probability = .0099
+
+        # Case 5: one parent 0,1, other parent 1,1
+        if (mother in one_gene and father in two_genes) or (father in one_gene and mother in two_genes):
+            mutation_probability = .01
 
     return mutation_probability
 
-def mutation_probabilities_two_genes(people, one_gene, two_genes):
+def mutation_probabilities_two_genes(people, the_person, one_gene, two_genes):
     mutation_probability = 0
-    for person in people:
-        # Check if person has parents
-        parent_list = parents(people, person)
-        mother = parent_list["mother"]
-        father = parent_list["father"]
 
-        #print(mother, father)
+    # Check if person has parents
+    parent_list = parents(people, the_person)
+    mother = parent_list["mother"]
+    father = parent_list["father"]
 
-        if mother == None and father == None:
-            print()
-            #print("No parents")
+    print(the_person, "TWO GENES ---> mother: ", mother, "; father: ", father)
 
-        if mother != None and father == None:
-            print()
-            #print("One parent")
+    if mother == None and father == None:
+        print()
+        #print("No parents")
 
-        # Case: person has two parents
-        if mother != None and father != None:
-            #print("mother != None and father != None")
-            # Case 1: one parent 0,0, other parent 1,1
-            if mother not in one_gene and mother not in two_genes:
-                if father in two_genes:
-                    mutation_probability = .0099
+    if mother != None and father == None:
+        print()
+        #print("One parent")
+
+    # Case: person has two parents
+    if mother != None and father != None:
+        #print("mother != None and father != None")
+        # Case 1: one parent 0,0, other parent 1,1
+        if mother not in one_gene and mother not in two_genes:
+            if father in two_genes:
+                mutation_probability = .0099
+        if father not in one_gene and father not in two_genes:
+            if mother in two_genes:
+                mutation_probability = .0099
+
+        # Case 2: mother 0,1 and father 0,1
+        if mother in one_gene and father in one_gene:
+            mutation_probability = .991
+
+        # Case 3: mother 0,0 and father 0,0
+        if mother not in one_gene and mother not in two_genes:
             if father not in one_gene and father not in two_genes:
-                if mother in two_genes:
-                    mutation_probability = .0099
+                mutation_probability = .001
 
-            # Case 2: mother 0,1 and father 0,1
-            if mother in one_gene and father in one_gene:
-                mutation_probability = .991
+        # Case 4: mother 1,1 and father 1,1
+        if mother in two_genes and father in two_genes:
+            mutation_probability = .9801
 
-            # Case 3: mother 0,0 and father 0,0
-            if mother not in one_gene and mother not in two_genes:
-                if father not in one_gene and father not in two_genes:
-                    mutation_probability = .001
-
-            # Case 4: mother 1,1 and father 1,1
-            if mother in two_genes and father in two_genes:
-                mutation_probability = .9801
-
-            # Case 5: one parent 0,1, other parent 1,1
-            if (mother in one_gene and father in two_genes) or (father in one_gene and mother in two_genes):
-                mutation_probability = .99
+        # Case 5: one parent 0,1, other parent 1,1
+        if (mother in one_gene and father in two_genes) or (father in one_gene and mother in two_genes):
+            mutation_probability = .99
 
     return mutation_probability
 
