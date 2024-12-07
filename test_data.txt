@@ -1,0 +1,85 @@
+{'Arthur': {'name': 'Arthur', 'mother': None, 'father': None, 'trait': None},
+ 'Charlie': {'name': 'Charlie',
+             'mother': 'Molly',
+             'father': 'Arthur',
+             'trait': None},
+ 'Fred': {'name': 'Fred', 'mother': 'Molly', 'father': 'Arthur', 'trait': None},
+ 'Ginny': {'name': 'Ginny',
+           'mother': 'Molly',
+           'father': 'Arthur',
+           'trait': None},
+ 'Molly': {'name': 'Molly', 'mother': None, 'father': None, 'trait': None},
+ 'Ron': {'name': 'Ron', 'mother': 'Molly', 'father': 'Arthur', 'trait': None}}
+
+
+{'Arthur': {'name': 'Arthur', 'mother': None, 'father': None, 'trait': None},
+ 'Charlie': {'name': 'Charlie',
+             'mother': 'Molly',
+             'father': 'Arthur',
+             'trait': None},
+ 'Fred': {'name': 'Fred', 'mother': 'Molly', 'father': 'Arthur', 'trait': None},
+ 'Ginny': {'name': 'Ginny',
+           'mother': 'Molly',
+           'father': 'Arthur',
+           'trait': None},
+ 'Molly': {'name': 'Molly', 'mother': None, 'father': None, 'trait': None},
+ 'Ron': {'name': 'Ron', 'mother': 'Molly', 'father': 'Arthur', 'trait': None}}
+
+
+{'Harry': {'name': 'Harry', 'mother': 'Lily', 'father': 'James', 'trait': None},
+ 'James': {'name': 'James', 'mother': None, 'father': None, 'trait': None},
+ 'Lily': {'name': 'Lily', 'mother': None, 'father': None, 'trait': None}}
+
+
+{'Harry': {'name': 'Harry', 'mother': 'Lily', 'father': 'James', 'trait': None},
+ 'James': {'name': 'James', 'mother': None, 'father': None, 'trait': None},
+ 'Lily': {'name': 'Lily', 'mother': None, 'father': None, 'trait': None}}
+
+
+{'Arthur': {'name': 'Arthur', 'mother': None, 'father': None, 'trait': None},
+ 'Charlie': {'name': 'Charlie',
+             'mother': 'Molly',
+             'father': 'Arthur',
+             'trait': None},
+ 'Fred': {'name': 'Fred', 'mother': 'Molly', 'father': 'Arthur', 'trait': None},
+ 'Ginny': {'name': 'Ginny',
+           'mother': 'Molly',
+           'father': 'Arthur',
+           'trait': None},
+ 'Molly': {'name': 'Molly', 'mother': None, 'father': None, 'trait': None},
+ 'Ron': {'name': 'Ron', 'mother': 'Molly', 'father': 'Arthur', 'trait': None}}
+
+
+{'Arthur': {'name': 'Arthur', 'mother': None, 'father': None, 'trait': None},
+ 'Hermione': {'name': 'Hermione',
+              'mother': None,
+              'father': None,
+              'trait': None},
+ 'Molly': {'name': 'Molly', 'mother': None, 'father': None, 'trait': None},
+ 'Ron': {'name': 'Ron', 'mother': 'Molly', 'father': 'Arthur', 'trait': None},
+ 'Rose': {'name': 'Rose', 'mother': 'Ron', 'father': 'Hermione', 'trait': None}}
+
+
+
+{'Arthur': {'name': 'Arthur', 'mother': None, 'father': None, 'trait': None},
+ 'Charlie': {'name': 'Charlie',
+             'mother': 'Molly',
+             'father': 'Arthur',
+             'trait': None},
+ 'Fred': {'name': 'Fred', 'mother': 'Molly', 'father': 'Arthur', 'trait': None},
+ 'Ginny': {'name': 'Ginny',
+           'mother': 'Molly',
+           'father': 'Arthur',
+           'trait': None},
+ 'Molly': {'name': 'Molly', 'mother': None, 'father': None, 'trait': None},
+ 'Ron': {'name': 'Ron', 'mother': 'Molly', 'father': 'Arthur', 'trait': None}}
+
+
+{'Arthur': {'name': 'Arthur', 'mother': None, 'father': None, 'trait': None},
+ 'Hermione': {'name': 'Hermione',
+              'mother': None,
+              'father': None,
+              'trait': None},
+ 'Molly': {'name': 'Molly', 'mother': None, 'father': None, 'trait': None},
+ 'Ron': {'name': 'Ron', 'mother': 'Molly', 'father': 'Arthur', 'trait': None},
+ 'Rose': {'name': 'Rose', 'mother': 'Ron', 'father': 'Hermione', 'trait': None}}

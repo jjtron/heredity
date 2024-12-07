@@ -44,7 +44,23 @@ def main():
     if len(sys.argv) != 2:
         sys.exit("Usage: python heredity.py data.csv")
     people = load_data(sys.argv[1])
-
+    people = {
+                'Harry': {'name': 'Harry', 'mother': 'Lily', 'father': 'James', 'trait': None},
+                'James': {'name': 'James', 'mother': None, 'father': None, 'trait': None},
+                'Lily': {'name': 'Lily', 'mother': None, 'father': None, 'trait': None}
+            }
+    '''
+    SHOULD GET THESE OUTPUTS
+        Harry 1  *  0.9503999999999999  *  0.9801
+        Harry 0.9314870399999999
+        James 0.9314870399999999  *  0.9503999999999999  *  0.96
+        James 0.8498738715033598
+        Lily 0.8498738715033598  *  0.9503999999999999  *  0.96
+        Lily 0.7754113223777214
+        
+        :(  joint_probability returns correct results for no gene or trait in simple family
+            expected joint probability to be in range [0.8664, 0.8864], got 0.7754113223777214 instead
+    '''
     # Keep track of gene and trait probabilities for each person
     probabilities = {
         person: {
@@ -60,16 +76,7 @@ def main():
         }
         for person in people
     }
-    p = joint_probability(
-        {'Harry': {'name': 'Harry', 'mother': 'Lily', 'father': 'James', 'trait': None},
-         'James': {'name': 'James', 'mother': None, 'father': None, 'trait': True},
-         'Lily': {'name': 'Lily', 'mother': None, 'father': None, 'trait': False}
-        },
-        {"Harry"},
-        {"James"},
-        {"James"}
-    )
-    return
+
     # Loop over all sets of people who might have the trait
     names = set(people)
     for have_trait in powerset(names):
@@ -139,6 +146,12 @@ def powerset(s):
 
 
 def joint_probability(people, one_gene, two_genes, have_trait):
+    '''
+    pprint.pp(people)
+    pprint.pp(one_gene)
+    pprint.pp(two_genes)
+    pprint.pp(have_trait)
+    '''
     """
     Compute and return a joint probability.
 
@@ -149,24 +162,29 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
+    running_total = 1
     for person in people:
         fg = 0
         ft = 0
         if person not in one_gene and person not in two_genes:
-            print("*0",person)
+            #print("*0",person)
             fg = calc_prob_gene(0, person in have_trait)
             ft = mutation_probabilities_zero_genes(people, person, one_gene, two_genes)
         if person in one_gene:
-            print("*1",person)
+            #print("*1",person)
             fg = calc_prob_gene(1, person in have_trait)
             ft = mutation_probabilities_one_gene(people, person, one_gene, two_genes)
         if person in two_genes:
-            print("*2",person)
+            #print("*2",person)
             fg = calc_prob_gene(2, person in have_trait)
             ft = mutation_probabilities_two_genes(people, person, one_gene, two_genes)
-        print(person, fg, " * ", ft)
+        #print(person, running_total, " * ", fg, " * ", ft)
+        running_total = running_total * fg * ft
+        #print(person, running_total)
+    return running_total
 
 def calc_prob_gene(gene_count, has_trait):
+        #print(PROBS["gene"][gene_count], PROBS["trait"][gene_count][has_trait])
         return PROBS["gene"][gene_count] * PROBS["trait"][gene_count][has_trait]
         
 def mutation_probabilities_zero_genes(people, the_person, one_gene, two_genes):
@@ -177,10 +195,10 @@ def mutation_probabilities_zero_genes(people, the_person, one_gene, two_genes):
     mother = parent_list["mother"]
     father = parent_list["father"]
 
-    print(the_person, "ZERO GENES ---> mother: ", mother, "; father: ", father)
+    #print(the_person, "ZERO GENES ---> mother: ", mother, "; father: ", father)
 
     if mother == None and father == None:
-        print()
+        return PROBS['gene'][0]
         #print("No parents")
 
     if mother != None and father == None:
@@ -223,7 +241,7 @@ def mutation_probabilities_zero_genes(people, the_person, one_gene, two_genes):
             if mother in one_gene:
                 mutation_probability = .9900
 
-    return mutation_probability
+    return mutation_probability * PROBS["trait"][0][False]
 
 
 def mutation_probabilities_one_gene(people, the_person, one_gene, two_genes):
@@ -234,10 +252,10 @@ def mutation_probabilities_one_gene(people, the_person, one_gene, two_genes):
     mother = parent_list["mother"]
     father = parent_list["father"]
 
-    print(the_person, "ONE GENE ---> mother: ", mother, "; father: ", father)
+    #print(the_person, "ONE GENE ---> mother: ", mother, "; father: ", father)
 
     if mother == None and father == None:
-        print()
+        return PROBS['gene'][1]
         #print("No parents")
 
     if mother != None and father == None:
@@ -280,7 +298,7 @@ def mutation_probabilities_one_gene(people, the_person, one_gene, two_genes):
             if mother in one_gene:
                 mutation_probability = .9900
 
-    return mutation_probability
+    return mutation_probability * PROBS["trait"][1][False]
 
 def mutation_probabilities_two_genes(people, the_person, one_gene, two_genes):
     mutation_probability = 0
@@ -290,10 +308,10 @@ def mutation_probabilities_two_genes(people, the_person, one_gene, two_genes):
     mother = parent_list["mother"]
     father = parent_list["father"]
 
-    print(the_person, "TWO GENES ---> mother: ", mother, "; father: ", father)
+    #print(the_person, "TWO GENES ---> mother: ", mother, "; father: ", father)
 
     if mother == None and father == None:
-        print()
+        return PROBS['gene'][2]
         #print("No parents")
 
     if mother != None and father == None:
@@ -336,7 +354,7 @@ def mutation_probabilities_two_genes(people, the_person, one_gene, two_genes):
             if mother in one_gene:
                 mutation_probability = .01
 
-    return mutation_probability
+    return mutation_probability * PROBS["trait"][2][False]
 
 
 def parents(people, person):
@@ -348,13 +366,18 @@ def parents(people, person):
 
 
 def update(probabilities, one_gene, two_genes, have_trait, p):
+    pprint.pp(probabilities)
+    pprint.pp(one_gene)
+    pprint.pp(two_genes)
+    pprint.pp(have_trait)
+    pprint.pp(p)
     """
     Add to `probabilities` a new joint probability `p`.
     Each person should have their "gene" and "trait" distributions updated.
     Which value for each distribution is updated depends on whether
     the person is in `have_gene` and `have_trait`, respectively.
     """
-    raise NotImplementedError
+    
 
 
 def normalize(probabilities):
