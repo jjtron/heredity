@@ -60,7 +60,16 @@ def main():
         }
         for person in people
     }
-
+    p = joint_probability(
+        {'Harry': {'name': 'Harry', 'mother': 'Lily', 'father': 'James', 'trait': None},
+         'James': {'name': 'James', 'mother': None, 'father': None, 'trait': True},
+         'Lily': {'name': 'Lily', 'mother': None, 'father': None, 'trait': False}
+        },
+        {"Harry","James"},
+        {"Lily"},
+        {"James"}
+    )
+    return
     # Loop over all sets of people who might have the trait
     names = set(people)
     for have_trait in powerset(names):
@@ -77,17 +86,11 @@ def main():
         # Loop over all sets of people who might have the gene
         for one_gene in powerset(names):
             for two_genes in powerset(names - one_gene):
-                pprint.pp(people)
-                pprint.pp(one_gene)
-                pprint.pp(two_genes)
-                pprint.pp(have_trait)
+
                 # Update probabilities with new joint probability
                 p = joint_probability(people, one_gene, two_genes, have_trait)
+                update(probabilities, one_gene, two_genes, have_trait, p)
 
-                # UNCOMMENT THE NEXT LINE
-                #update(probabilities, one_gene, two_genes, have_trait, p)
-
-    return
     # Ensure probabilities sum to 1
     normalize(probabilities)
 
@@ -146,20 +149,63 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
-    p = 0
+    print(mutation_probabilities(people, one_gene, two_genes))
+
+def mutation_probabilities(people, one_gene, two_genes):
+    mutation_probability = 0
     for person in people:
-        if person in one_gene: #Has the gene
-            if person in have_trait: #Has the trait
-                #Has the gene and trait
-                p = PROBS["gene"][1] * PROBS["trait"][0][True]
-                print("Probability ", person, " has gene and trait:     ", p)
-            else:
-                p = PROBS["gene"][1] * PROBS["trait"][0][False]
-                print("Probability ", person, " has gene and NOT trait: ", p)
-        else:
-            print(person, " NOT in gene_one")
-    
-    print()
+        # Check if person has parents
+        parent_list = parents(people, person)
+        mother = parent_list["mother"]
+        father = parent_list["father"]
+
+        #print(mother, father)
+
+        if mother == None and father == None:
+            print()
+            #print("No parents")
+
+        if mother != None and father == None:
+            print()
+            #print("One parent")
+
+        # Case: person has two parents
+        if mother != None and father != None:
+            #print("mother != None and father != None")
+            # Case 1: one parent 0,0, other parent 1,1
+            if mother not in one_gene and mother not in two_genes:
+                if father in two_genes:
+                    mutation_probability = .9802
+            if father not in one_gene and father not in two_genes:
+                if mother in two_genes:
+                    mutation_probability = .9802
+
+            # Case 2: mother 0,1 and father 0,1
+            if mother in one_gene and father in one_gene:
+                mutation_probability = .9999
+
+            # Case 3: mother 0,0 and father 0,0
+            if mother not in one_gene and mother not in two_genes:
+                if father not in one_gene and father not in two_genes:
+                    mutation_probability = .0099
+
+            # Case 4: mother 1,1 and father 1,1
+            if mother in two_genes and father in two_genes:
+                mutation_probability = .0099
+
+            # Case 5: one parent 0,1, other parent 1,1
+            if (mother in one_gene and father in two_genes) or (father in one_gene and mother in two_genes):
+                mutation_probability = .01
+
+    return mutation_probability
+
+def parents(people, person):
+    # Check if person has parents
+    retval = {}
+    retval["mother"] = people[person]["mother"]
+    retval["father"] = people[person]["father"]
+    return retval
+
 
 def update(probabilities, one_gene, two_genes, have_trait, p):
     """
